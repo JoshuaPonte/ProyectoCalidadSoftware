@@ -20,7 +20,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product getProductById(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found with ID: " + id));
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + id));
     }
 
     @Override
@@ -31,9 +31,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product updateProduct(Long id, Product productDetails) {
         Product product = getProductById(id);
-        product.setName(productDetails.getName());
-        product.setPrice(productDetails.getPrice());
+        product.setCodigo(productDetails.getCodigo());
+        product.setNombre(productDetails.getNombre());
+        product.setPrecio(productDetails.getPrecio());
         product.setStock(productDetails.getStock());
+        product.setStockMinimo(productDetails.getStockMinimo());
+        product.setCategoria(productDetails.getCategoria());
+        product.setProveedor(productDetails.getProveedor());
         return repository.save(product);
     }
 

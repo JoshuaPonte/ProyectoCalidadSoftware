@@ -1,75 +1,82 @@
 package com.utp.massmanager.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "products")
+@Table(name = "productos")
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "El nombre del producto no puede estar vacío")
-    @Column(nullable = false, length = 100)
-    private String name;
+    @NotBlank
+    @Column(nullable = false, unique = true, length = 50)
+    private String codigo;
 
-    @NotNull(message = "El precio es obligatorio")
-    @Positive(message = "El precio debe ser un número mayor a cero")
+    @ManyToOne
+    @JoinColumn(name = "id_categoria", nullable = false)
+    private Categoria categoria;
+
+    @ManyToOne
+    @JoinColumn(name = "id_proveedor")
+    private Proveedor proveedor;
+
+    @NotBlank
+    @Column(nullable = false, length = 50)
+    private String nombre;
+
+    @NotNull
+    @Positive
     @Column(nullable = false)
-    private Double price;
+    private Double precio;
 
-    @NotNull(message = "El stock es obligatorio")
-    @Min(value = 0, message = "El stock no puede ser un número negativo")
+    @NotNull
+    @Min(0)
     @Column(nullable = false)
     private Integer stock;
 
-    // Constructor vacío obligatorio para JPA
-    public Product() {
+    @Min(0)
+    @Column(name = "stock_minimo", nullable = false)
+    private Integer stockMinimo = 0;
+
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
-    // Constructor completo
-    public Product(Long id, String name, Double price, Integer stock) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.stock = stock;
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
     }
 
-    // Getters y Setters manuales (Compatibles con cualquier versión de Java)
-    public Long getId() {
-        return id;
-    }
+    public Product() {}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public Integer getStock() {
-        return stock;
-    }
-
-    public void setStock(Integer stock) {
-        this.stock = stock;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getCodigo() { return codigo; }
+    public void setCodigo(String codigo) { this.codigo = codigo; }
+    public Categoria getCategoria() { return categoria; }
+    public void setCategoria(Categoria categoria) { this.categoria = categoria; }
+    public Proveedor getProveedor() { return proveedor; }
+    public void setProveedor(Proveedor proveedor) { this.proveedor = proveedor; }
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    public Double getPrecio() { return precio; }
+    public void setPrecio(Double precio) { this.precio = precio; }
+    public Integer getStock() { return stock; }
+    public void setStock(Integer stock) { this.stock = stock; }
+    public Integer getStockMinimo() { return stockMinimo; }
+    public void setStockMinimo(Integer stockMinimo) { this.stockMinimo = stockMinimo; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
 }
