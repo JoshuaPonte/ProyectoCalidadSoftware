@@ -27,6 +27,9 @@ public class Empleado {
     @Column(name = "e_correo", length = 50)
     private String correo;
 
+    @Column(nullable = false)
+    private String password;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
@@ -56,6 +59,8 @@ public class Empleado {
     public void setApellido(String apellido) { this.apellido = apellido; }
     public String getCorreo() { return correo; }
     public void setCorreo(String correo) { this.correo = correo; }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
 }

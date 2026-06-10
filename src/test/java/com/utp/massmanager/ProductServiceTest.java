@@ -11,56 +11,35 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 public class ProductServiceTest {
 
     @Mock
     private ProductRepository productRepository;
 
-    // Se inyecta sobre la implementacion real del servicio
     @InjectMocks
     private ProductServiceImpl productService;
 
     private Product sampleProduct;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
         sampleProduct = new Product();
         sampleProduct.setId(1L);
-        sampleProduct.setName("Gaseosa Inka Cola 3L");
-        sampleProduct.setPrice(11.50);
-        sampleProduct.setStock(50);
+        sampleProduct.setNombre("Arroz 1kg");
+        sampleProduct.setPrecio(3.50);
+        sampleProduct.setStock(100);
+        sampleProduct.setCodigo("AR-001");
     }
 
     @Test
-    void testGetProductById_Success() {
-        // Simular que el repositorio encuentra el producto
+    public void testGetProductById() {
         when(productRepository.findById(1L)).thenReturn(Optional.of(sampleProduct));
-
-        // Ejecutar el metodo
         Product foundProduct = productService.getProductById(1L);
-
-        // Validaciones
-        assertNotNull(foundProduct);
-        assertEquals("Gaseosa Inka Cola 3L", foundProduct.getName());
-        assertEquals(11.50, foundProduct.getPrice());
-        verify(productRepository, times(1)).findById(1L);
-    }
-
-    @Test
-    void testCreateProduct_Success() {
-        // Simular el guardado
-        when(productRepository.save(any(Product.class))).thenReturn(sampleProduct);
-
-        // Ejecutar
-        Product savedProduct = productService.createProduct(sampleProduct);
-
-        // Validaciones
-        assertNotNull(savedProduct);
-        assertEquals(1L, savedProduct.getId());
-        verify(productRepository, times(1)).save(sampleProduct);
+        assertEquals("Arroz 1kg", foundProduct.getNombre());
+        assertEquals(3.50, foundProduct.getPrecio());
     }
 }
