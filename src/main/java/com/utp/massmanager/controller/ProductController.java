@@ -1,10 +1,13 @@
 package com.utp.massmanager.controller;
 
 import com.utp.massmanager.model.Product;
+import com.utp.massmanager.model.ProductRequest;
 import com.utp.massmanager.service.ProductService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
+
 import java.util.List;
 
 @RestController
@@ -24,14 +27,19 @@ public class ProductController {
         return productService.getProductById(id);
     }
 
-    @PostMapping
-    public Product createProduct(@Valid @RequestBody Product product) {
-        return productService.createProduct(product);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Product createProduct(
+            @RequestPart("data") ProductRequest request,
+            @RequestPart(value = "imagen", required = false) MultipartFile imagen) {
+        return productService.createProduct(request, imagen);
     }
 
-    @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable Long id, @Valid @RequestBody Product product) {
-        return productService.updateProduct(id, product);
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Product updateProduct(
+            @PathVariable Long id,
+            @RequestPart("data") ProductRequest request,
+            @RequestPart(value = "imagen", required = false) MultipartFile imagen) {
+        return productService.updateProduct(id, request, imagen);
     }
 
     @DeleteMapping("/{id}")

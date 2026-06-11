@@ -42,6 +42,9 @@ public class Product {
     @Column(name = "stock_minimo", nullable = false)
     private Integer stockMinimo = 0;
 
+    @Column(name = "imagen_url", length = 255)
+    private String imagenUrl;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
@@ -50,6 +53,9 @@ public class Product {
 
     @PrePersist
     public void prePersist() {
+        if (this.codigo == null || this.codigo.isBlank()) {
+            this.codigo = "SKU-" + java.util.UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        }
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
@@ -77,6 +83,8 @@ public class Product {
     public void setStock(Integer stock) { this.stock = stock; }
     public Integer getStockMinimo() { return stockMinimo; }
     public void setStockMinimo(Integer stockMinimo) { this.stockMinimo = stockMinimo; }
+    public String getImagenUrl() { return imagenUrl; }
+    public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
 }
