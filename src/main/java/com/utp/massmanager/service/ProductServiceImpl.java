@@ -72,6 +72,15 @@ public class ProductServiceImpl implements ProductService {
         }
 
         if (imagen != null && !imagen.isEmpty()) {
+            // Borrar imagen anterior si existe
+            if (product.getImagenUrl() != null) {
+                try {
+                    Path imagenAnterior = Paths.get(product.getImagenUrl().substring(1));
+                    Files.deleteIfExists(imagenAnterior);
+                } catch (IOException e) {
+                    // Si no se puede borrar, continuamos igual
+                }
+            }
             product.setImagenUrl(guardarImagen(imagen));
         }
 
@@ -81,6 +90,14 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void deleteProduct(Long id) {
         Product product = getProductById(id);
+        if (product.getImagenUrl() != null) {
+            try {
+                Path imagenAnterior = Paths.get(product.getImagenUrl().substring(1));
+                Files.deleteIfExists(imagenAnterior);
+            } catch (IOException e) {
+                // Si no se puede borrar, continuamos igual
+            }
+        }
         repository.delete(product);
     }
 
