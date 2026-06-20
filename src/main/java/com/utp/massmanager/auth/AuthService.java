@@ -25,7 +25,7 @@ public class AuthService {
             throw new RuntimeException("Credenciales inválidas");
         }
 
-        String token = jwtUtil.generateToken(empleado.getCorreo(), empleado.getRol().getDescripcion());
+        String token = jwtUtil.generateToken(empleado.getId(), empleado.getCorreo(), empleado.getRol().getDescripcion());
         return new AuthResponse(token, empleado.getCorreo(), empleado.getNombre(), empleado.getRol().getDescripcion());
     }
 
@@ -46,7 +46,7 @@ public class AuthService {
 
         empleadoRepository.save(empleado);
 
-        String token = jwtUtil.generateToken(empleado.getCorreo(), rol.getDescripcion());
+        String token = jwtUtil.generateToken(empleado.getId(), empleado.getCorreo(), rol.getDescripcion());
         return new AuthResponse(token, empleado.getCorreo(), empleado.getNombre(), rol.getDescripcion());
     }
 }
